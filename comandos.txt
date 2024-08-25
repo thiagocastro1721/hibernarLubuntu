@@ -32,8 +32,8 @@ Remova a linha que faz menção ao swapfile.
 
 11. O sistema tentará hibernar. Caso obtenha sucesso, use o script e o atalho desktop disponibilizados no mesmo repositório deste arquivo de texto.
 
-11.1 chmod +x hibernar.desktop
-11.2 chmod +x hibernar.sh
+11.1 chmod +x camino/para/o/arquivo/hibernar.desktop
+11.2 chmod +x camino/para/o/arquivo/hibernar.sh
 
 12. Executar sem digitar senha root.
 	sudo visudo
