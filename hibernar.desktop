@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Hibernar
+Coment= 
+Exec=sudo "/home/thiago/Pictures/hibernar.sh"
+Icon=/home/thiago/Pictures/sleeping.png
+Path=/home/thiago/Desktop
+Terminal=false
+StartupNotify=false

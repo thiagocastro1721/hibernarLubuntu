@@ -1,0 +1,148 @@
+HIBERNAR LUBUNTU / UBUNTU
+
+PLANO A 
+
+PARA DISTROS DE 2024
+
+Configuração na instalação:
+
+0. Crie uma nova tabela de partições GPT.
+
+1. Crie uma partição swap de no mínimo 2xRAM, recomendável 3xRAM, com sistema de arquivos "linuxswap" e com o marcador "swap".
+
+2. Crie uma partição de 500MB com o sistema de arquivos "fat32", ponto de montagem "/boot/efi" com marcador "boot".
+
+3. Crie uma partição com o espaço disponível em disco com sistema de arquivos "ext4", ponto de montagem "/" e sem marcadores.
+
+4. faça a instalação.
+
+5. Invoque o terminal com Ctl+Alt+T e digite:
+	sudo nano /etc/fstab
+Remova a linha que faz menção ao swapfile.
+
+6. Instale no terminal "sudo apt install pm-utils".
+
+7. sudo update-grub
+
+8. sudo update-initramfs -u
+
+9. reboot
+
+10. Teste a hibernação com "sudo pm-hibernate"
+
+11. O sistema tentará hibernar. Caso obtenha sucesso, use o script e o atalho desktop disponibilizados no mesmo repositório deste arquivo de texto.
+
+11.1 chmod +x hibernar.desktop
+11.2 chmod +x hibernar.sh
+
+12. Executar sem digitar senha root.
+	sudo visudo
+12.1 Acrescente a seguinte linha ao arquivo para executar sem digitar senha root.
+	username ALL=(ALL) NOPASSWD: /caminho/para/o/script.sh
+
+13. No estágio atual, ao clicar no atalho "hibernar.desktop", uma janela de terminal deve ser exibida, solicitando a confirmação para proceder com a hibernação.
+
+14. Caso não obtenha sucesso, observe as breves mensagens de erro e tente corrigi-las.
+
+PLANO B
+
+SEM REINSTALAR
+
+Após ter  certeza que existe uma partição swap ativa,
+observe os exemplos de arquivos abaixo e tente reproduzi-los:
+
+sudo nano /etc/default/grub
+__________________________
+...
+GRUB_DEFAULT=0
+GRUB_TIMEOUT_STYLE=hidden
+GRUB_TIMEOUT=0
+GRUB_DISTRIBUTOR='Ubuntu'
+GRUB_CMDLINE_LINUX_DEFAULT='quiet splash resume=UUID=ccdbecd3-e4d1-4e12-b28a-704b34375f73'
+GRUB_CMDLINE_LINUX=""
+...
+__________________________
+
+sudo nano /etc/fstab
+__________________________
+...
+# <file system>             <mount point>  <type>  <options>  <dump>  <pass>
+UUID=ccdbecd3-e4d1-4e12-b28a-704b34375f73 swap           swap    defaults   0 0
+UUID=bee27b82-c6ae-41ad-9372-aa8a6cab5793 /              ext4    discard    0 1
+tmpfs                                     /tmp           tmpfs   defaults,noatime,mode=1777 0 0
+...
+__________________________
+
+Após editar os arquivos acima, siga o plano "A" a partir do passo 5.
+
+
+
+
+Plano C
+
+PARA DISTROS DE 2022 E ANTERIORES.
+
+1. Antes, você deve criar uma partição de swap no disco.
+  Se ainda não tiver feito, você pode tentar com o "Gerenciador de partições KDE" ou o "gparted".
+
+
+2. cat /sys/power/state
+	se apareser a mensagem "freeze mem disk", então o pc suporta hibernar
+3. grep swap /etc/fstab
+	copiar endereço UUID
+	exemplo"d05e28bf-26d4-42c5-b1fc-3853d1bd616e"
+
+4. Se o passo acima não funcionar, procure um gerenciador de partições. O GPARTED e o gerenciador de partições KDE 
+  são exemplos. Procure o endereço UUID.
+
+5. sudo nano /etc/default/grub
+	procure a linha GRUB_CMDLINE_LINUX_DEFAULT="quiet splash resume=UUID=d05e28bf-26d4-42c5-b1fc-3853d1bd616e"
+	e cole o endereço UUID logodepois de "resume=UUID=". 
+	ctrl + x
+	y
+	enter
+
+6. sudo update-grub
+
+7. sudo nano /etc/initramfs-tools/conf.d/resume
+	dentro do aquivo em branco digite o seu endereço UUID swap:
+		RESUME=UUID=d05e28bf-26d4-42c5-b1fc-3853d1bd616e
+	ctrl + x
+	y
+	enter
+8. sudo nano /etc/polkit-1/localauthority/50-local.d/com.ubuntu.enable-hibernate.pkla
+	dentro do arquivo em branco escreva:
+	
+[Re-enable hibernate by default in upower]
+Identity=unix-user:*
+Action=org.freedesktop.upower.hibernate
+ResultActive=yes
+[Re-enable hibernate by default in logind]
+Identity=unix-user:*
+Action=org.freedesktop.login1.hibernate
+ResultActive=yes
+		
+	ctrl + x
+	y
+	enter
+
+9. sudo nano /etc/fstab
+	apagar o swap file.
+	apague a linha seguinte e salve o arquivo:
+		/swapfile                                 swap           swap    defaults   0 0
+	ctrl + x
+	y
+	enter
+
+10. Vá ao gerenciador de partições KDE e ative a memória swap.
+
+11. Para hibernar ao fechar a tampa:
+menu iniciar > Preferências > Definições do LXQT > Gestão de energia > tampa
+se já não estiver marcada, marcar [] ativar monitor de tampa
+com bateria [hibernar]
+Na tomada hibernar
+close
+
+12. reboot
+
+
