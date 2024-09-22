@@ -6,5 +6,5 @@ Coment=
 Exec=sudo "/home/thiago/Pictures/hibernar.sh"
 Icon=/home/thiago/Pictures/sleeping.png
 Path=/home/thiago/Desktop
-Terminal=false
+Terminal=true
 StartupNotify=false
