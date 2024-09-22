@@ -37,8 +37,8 @@ Remova a linha que faz menção ao swapfile.
 
 12. Executar sem digitar senha root.
 	sudo visudo
-12.1 Acrescente a seguinte linha ao arquivo para executar sem digitar senha root.
-	username ALL=(ALL) NOPASSWD: /caminho/para/o/script.sh
+12.1 Acrescente a seguinte linha ao arquivo para executar o script sem digitar senha root. Substitua a palavra username pelo o seu nome de usuário linux.
+username ALL=(ALL) NOPASSWD: /caminho/para/o/script.sh
 
 13. No estágio atual, ao clicar no atalho "hibernar.desktop", uma janela de terminal deve ser exibida, solicitando a confirmação para proceder com a hibernação.
 
